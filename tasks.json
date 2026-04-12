@@ -1,0 +1,97 @@
+{
+  "tasks": [
+    {
+      "id": "task_1",
+      "observation": {
+        "request_id": "REQ-001",
+        "requester_role": "Marketing",
+        "region": "US_CCPA",
+        "raw_data": "{\"user\": \"John\", \"credit_card\": \"4532-xxxx-xxxx-1234\"}",
+        "policy_rule": "Marketing must never access financial data."
+      },
+      "ground_truth": {
+        "decision": "block",
+        "fields_to_redact": [],
+        "reason_code": "Policy_Violation"
+      }
+    },
+    {
+      "id": "task_2",
+      "observation": {
+        "request_id": "REQ-002",
+        "requester_role": "Data_Science",
+        "region": "US_CCPA",
+        "raw_data": "Chat: Hi, my name is Sarah and my phone number is 555-0199. My router is broken.",
+        "policy_rule": "Data Scientists may access support logs only if direct identifiers (Names, Phones) are redacted."
+      },
+      "ground_truth": {
+        "decision": "redact",
+        "fields_to_redact": ["Sarah", "555-0199"],
+        "reason_code": "PII_Redacted"
+      }
+    },
+    {
+      "id": "task_3",
+      "observation": {
+        "request_id": "REQ-003",
+        "requester_role": "External_Fraud_Auditor",
+        "region": "Global_Mixed",
+        "raw_data": "[{\"id\": \"U-103\", \"name\": \"Carlos\", \"fraud_score\": 0.2, \"deletion_requested\": true, \"purchases\": [\"Desk\"]}, {\"id\": \"U-104\", \"name\": \"Diana\", \"fraud_score\": 0.88, \"deletion_requested\": true, \"purchases\": [\"Insulin\"]}]",
+        "policy_rule": "1. Default: Redact Names. 2. FCL Rule: Do NOT redact names if fraud_score > 0.80. 3. GDPR Rule: Block user entirely if deletion_requested is true. 4. Health Rule: ALWAYS redact medical purchases like Insulin."
+      },
+      "ground_truth": {
+        "decision": "redact",
+        "fields_to_redact": [
+          "{\"id\": \"U-103\", \"name\": \"Carlos\", \"fraud_score\": 0.2, \"deletion_requested\": true, \"purchases\": [\"Desk\"]}",
+          "Insulin"
+        ],
+        "reason_code": "Mixed_Compliance_Applied"
+      }
+    },
+    {
+      "id": "task_4",
+      "observation": {
+        "request_id": "REQ-004",
+        "requester_role": "Product_Strategy",
+        "region": "Global",
+        "raw_data": "{\"session_length_sec\": 120, \"feature_used\": \"dark_mode\", \"device\": \"iOS\"}",
+        "policy_rule": "Product Strategy may freely access fully anonymized application telemetry. Approve if no PII is present."
+      },
+      "ground_truth": {
+        "decision": "approve",
+        "fields_to_redact": [],
+        "reason_code": "Clean_Telemetry_Approved"
+      }
+    },
+    {
+      "id": "task_5",
+      "observation": {
+        "request_id": "REQ-005",
+        "requester_role": "AI_Training_Cluster",
+        "region": "EU_GDPR",
+        "raw_data": "{\"voice_memo_id\": \"V-8821\", \"audio_transcript\": \"Remind me to buy milk.\", \"biometric_signature\": \"0x8A19F\"}",
+        "policy_rule": "Raw voice or biometric signatures generated in the EU_GDPR region CANNOT be transferred to external AI clusters under any circumstances without explicit consent (assume no consent)."
+      },
+      "ground_truth": {
+        "decision": "block",
+        "fields_to_redact": [],
+        "reason_code": "EU_Biometric_Restriction"
+      }
+    },
+    {
+      "id": "task_6",
+      "observation": {
+        "request_id": "REQ-006",
+        "requester_role": "Third_Party_Vendor",
+        "region": "US_CCPA",
+        "raw_data": "{\"survey_response\": \"The new tool is fast!\", \"user_hash\": \"A7B9\", \"system_metadata\": \"logged_by: john.doe@internal-corp.com\"}",
+        "policy_rule": "Third-party vendors may read user survey responses and hashes, but internal employee email addresses must NEVER be leaked in system metadata."
+      },
+      "ground_truth": {
+        "decision": "redact",
+        "fields_to_redact": ["john.doe@internal-corp.com"],
+        "reason_code": "Internal_Email_Redacted"
+      }
+    }
+  ]
+}

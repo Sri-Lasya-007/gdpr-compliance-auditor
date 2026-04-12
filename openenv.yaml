@@ -1,0 +1,46 @@
+env_id: gdpr-compliance-auditor
+version: "1.0.0"
+description: "GDPR compliance auditing environment"
+
+tasks:
+  - id: task_1
+    difficulty: easy
+    max_steps: 10
+    grader:
+      type: llm
+      prompt_template: "Score the GDPR compliance audit performance 0.0 to 1.0 based on accuracy of blocking unauthorized marketing access to financial data."
+
+  - id: task_2
+    difficulty: medium
+    max_steps: 10
+    grader:
+      type: llm
+      prompt_template: "Score the GDPR compliance audit performance 0.0 to 1.0 based on accuracy of surgical PII redaction for data science logs."
+
+  - id: task_3
+    difficulty: hard
+    max_steps: 10
+    grader:
+      type: llm
+      prompt_template: "Score the GDPR compliance audit performance 0.0 to 1.0 based on correctly handling complex mixed-compliance rules involving fraud scores and medical data."
+
+  - id: task_4
+    difficulty: easy
+    max_steps: 10
+    grader:
+      type: llm
+      prompt_template: "Score the GDPR compliance audit performance 0.0 to 1.0 based on accurately approving clean, anonymized application telemetry."
+
+  - id: task_5
+    difficulty: medium
+    max_steps: 10
+    grader:
+      type: llm
+      prompt_template: "Score the GDPR compliance audit performance 0.0 to 1.0 based on enforcing strict EU GDPR biometric regional transfer restrictions."
+
+  - id: task_6
+    difficulty: hard
+    max_steps: 10
+    grader:
+      type: llm
+      prompt_template: "Score the GDPR compliance audit performance 0.0 to 1.0 based on accurately redacting internal employee email leaks from system metadata."
